@@ -3,6 +3,7 @@ package ru.job4j.quartz;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +18,22 @@ import static org.quartz.TriggerBuilder.newTrigger;
 public class AlertRabbit {
 
     private static Connection connection;
+    private static Properties properties;
+
+    public Properties initProp() throws IOException {
+        InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties");
+        Properties prop = new Properties();
+        prop.load(in);
+    }
+
+    public Connection initCon(Properties properties) throws Exception {
+        properties.load();
+        Class.forName(properties.getProperty("driver"));
+        String url = properties.getProperty("url");
+        String login = properties.getProperty("username");
+        String password = properties.getProperty("password");
+        connection = DriverManager.getConnection(url, login, password);
+    }
 
     public void init() {
         try (InputStream in = AlertRabbit.class
@@ -35,6 +52,13 @@ public class AlertRabbit {
 
     public static void main(String[] args) {
         try {
+            AlertRabbit alertRabbit = new AlertRabbit();
+            var prop = alertRabbit.initProp();
+            var connect = alertRabbit.initCon(prop);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /*try {
             AlertRabbit alertRabbit = new AlertRabbit();
             alertRabbit.init();
             List<Long> store = new ArrayList<>();
@@ -58,7 +82,7 @@ public class AlertRabbit {
             System.out.println(store);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public static class Rabbit implements Job {
