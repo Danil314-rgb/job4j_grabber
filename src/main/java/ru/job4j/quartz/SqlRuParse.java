@@ -11,7 +11,10 @@ public class SqlRuParse {
         Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
         Elements row = doc.select(".postslisttopic");
         for (Element td : row) {
+            Element href = td.child(0);
             Element parent = td.parent();
+            System.out.println(href.attr("href"));
+            System.out.println(href.text());
             System.out.println(parent.children().get(5).text());
         }
     }
