@@ -60,7 +60,7 @@ public class SqlRuDateTimeParser implements DateTimeParser {
         Elements row = doc.select(".postslisttopic");
         for (Element td : row) {
             Element parent = td.parent();
-            String str = parent.children().get(5).text(); // дата с сайта
+            String str = parent.children().get(5).text();
             LocalDateTime date = parser.parse(str);
             System.out.println(date);
         }
