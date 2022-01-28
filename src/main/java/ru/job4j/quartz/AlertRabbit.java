@@ -23,7 +23,10 @@ public class AlertRabbit {
             Properties prop = new Properties();
             prop.load(in);
             return prop;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     public Connection initCon(Properties properties) throws Exception {
