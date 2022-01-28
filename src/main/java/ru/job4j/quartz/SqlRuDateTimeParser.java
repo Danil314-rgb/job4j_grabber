@@ -12,7 +12,11 @@ import java.util.Map;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
 
-    private static final LocalDate today = LocalDate.now();
+    private static final LocalDate PRESENTDAY = LocalDate.now();
+    private static final DateTimeFormatter FORMATTERFORPRESENTDAY = DateTimeFormatter.ofPattern("d MM yy");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("d MM yy, H:mm");
+    private static final String TODAY = "сегодня";
+    private static final String YESTERDAY = "вчера";
 
     private static final Map<String, String> MONTHS = Map.ofEntries(
             Map.entry("янв", "01"),
@@ -26,45 +30,35 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             Map.entry("сен", "09"),
             Map.entry("отк", "10"),
             Map.entry("ноя", "11"),
-            Map.entry("дек", "12"),
-            Map.entry("сегодня", ""),
-            Map.entry("вчера", "")
+            Map.entry("дек", "12")
     );
 
     @Override
     public LocalDateTime parse(String parse) {
         String result = "";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
         String[] all = parse.split(",");
         String[] oneStr = all[0].split(" ");
         if (oneStr.length < 2) {
-            if (oneStr[0].contains("сегодня")) {
-                result = parse.replaceFirst(oneStr[0], today.format(formatter));
-
-            } else if (oneStr[0].contains("вчера")) {
-                result = parse.replaceFirst(oneStr[0], today.minusDays(1).format(formatter));
+            if (TODAY.contains(oneStr[0])) {
+                result = parse.replaceFirst(oneStr[0], PRESENTDAY.format(FORMATTERFORPRESENTDAY));
+            } else if (YESTERDAY.contains(oneStr[0])) {
+                result = parse.replaceFirst(oneStr[0], PRESENTDAY.minusDays(1).format(FORMATTERFORPRESENTDAY));
             }
         } else {
             String moth = oneStr[1];
             result = parse.replaceFirst(moth, MONTHS.get(moth));
         }
-        result = result.replaceAll(",", "");
-        System.out.println(result);
-        String res = "2020 11 11 9:23:00";
-        return LocalDateTime.parse(result);
+        return LocalDateTime.parse(result, FORMATTER);
     }
 
     public static void main(String[] args) throws Exception {
         SqlRuDateTimeParser parser = new SqlRuDateTimeParser();
-        for (int i = 1; i < 6; i++) {
-            Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers/" + i).get();
-            Elements row = doc.select(".postslisttopic");
-            for (Element td : row) {
-                Element parent = td.parent();
-                String str = parent.children().get(5).text();
-                LocalDateTime date = parser.parse(str);
-                System.out.println(date);
-            }
+        Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
+        Elements row = doc.select(".postslisttopic");
+        for (Element td : row) {
+            Element parent = td.parent();
+            String str = parent.children().get(5).text();
+            System.out.println(parser.parse(str));
         }
     }
 }
