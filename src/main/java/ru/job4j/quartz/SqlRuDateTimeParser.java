@@ -56,13 +56,15 @@ public class SqlRuDateTimeParser implements DateTimeParser {
 
     public static void main(String[] args) throws Exception {
         SqlRuDateTimeParser parser = new SqlRuDateTimeParser();
-        Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
-        Elements row = doc.select(".postslisttopic");
-        for (Element td : row) {
-            Element parent = td.parent();
-            String str = parent.children().get(5).text();
-            LocalDateTime date = parser.parse(str);
-            System.out.println(date);
+        for (int i = 1; i < 6; i++) {
+            Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers/" + i).get();
+            Elements row = doc.select(".postslisttopic");
+            for (Element td : row) {
+                Element parent = td.parent();
+                String str = parent.children().get(5).text();
+                LocalDateTime date = parser.parse(str);
+                System.out.println(date);
+            }
         }
     }
 }
