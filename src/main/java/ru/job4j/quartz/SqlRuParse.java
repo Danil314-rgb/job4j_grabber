@@ -5,7 +5,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class SqlRuParse {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SqlRuParse implements Parse {
+
+    private final DateTimeParser dateTimeParser;
+
+    public SqlRuParse(DateTimeParser dateTimeParser) {
+        this.dateTimeParser = dateTimeParser;
+    }
 
     public static void main(String[] args) throws Exception{
         Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
@@ -13,9 +22,25 @@ public class SqlRuParse {
         for (Element td : row) {
             Element href = td.child(0);
             Element parent = td.parent();
-            System.out.println(href.attr("href"));
-            System.out.println(href.text());
-            System.out.println(parent.children().get(5).text());
+            String linkVacancy = href.attr("href");
+            System.out.println(linkVacancy);
+            //System.out.println(href.text());
+            //System.out.println(parent.children().get(5).text());
+            SqlRuParse ruParse = new SqlRuParse();
+            ruParse.list(linkVacancy);
         }
+    }
+
+    @Override
+    public List<Post> list(String link) throws Exception {
+        List<Post> posts = new ArrayList<>();
+        posts.add(detail(link));
+        return posts;
+    }
+
+    @Override
+    public Post detail(String link) throws Exception {
+        PartsLoading parts = new PartsLoading();
+        return parts.searchData(link);
     }
 }
