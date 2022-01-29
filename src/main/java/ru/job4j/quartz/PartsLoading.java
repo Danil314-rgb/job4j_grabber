@@ -15,7 +15,8 @@ public class PartsLoading {
         SqlRuDateTimeParser parser = new SqlRuDateTimeParser();
         Document doc = Jsoup.connect(link).get();
         String description  = doc.select(".msgBody").get(1).text();
-        String date = doc.select(".msgFooter").get(0).text().substring(0, 16).trim();
+        String date = doc.select(".msgFooter").get(0).text();
+        date = date.substring(0, date.indexOf('[')).trim();
         String title = doc.select(".messageHeader").get(0).text();
         return new Post(title, link, description, parser.parse(date));
     }
