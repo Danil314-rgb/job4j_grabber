@@ -24,23 +24,29 @@ public class SqlRuParse implements Parse {
             Element parent = td.parent();
             String linkVacancy = href.attr("href");
             System.out.println(linkVacancy);
-            //System.out.println(href.text());
-            //System.out.println(parent.children().get(5).text());
-            SqlRuParse ruParse = new SqlRuParse();
-            ruParse.list(linkVacancy);
+            /*System.out.println(href.text());
+            System.out.println(parent.children().get(5).text());*/
+            /*SqlRuParse ruParse = new SqlRuParse();
+            ruParse.list(linkVacancy);*/
         }
     }
 
     @Override
-    public List<Post> list(String link) throws Exception {
+    public List<Post> list(String link) {
         List<Post> posts = new ArrayList<>();
         posts.add(detail(link));
         return posts;
     }
 
     @Override
-    public Post detail(String link) throws Exception {
-        PartsLoading parts = new PartsLoading();
-        return parts.searchData(link);
+    public Post detail(String link) {
+        Post post = null;
+        try {
+            PartsLoading parts = new PartsLoading();
+            post = parts.searchData(link);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return post;
     }
 }
