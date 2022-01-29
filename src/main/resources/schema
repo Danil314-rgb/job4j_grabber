@@ -1,3 +1,7 @@
-create table rabbit (
+create table post (
+    id serial primary key,
+    name text,
+    text text,
+    link text not null unique,
     created_date timestamp
 );
