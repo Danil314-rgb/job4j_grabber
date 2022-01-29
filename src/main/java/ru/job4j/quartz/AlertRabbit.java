@@ -18,15 +18,14 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 public class AlertRabbit {
 
-    public Properties initProp() throws IOException {
+    public Properties initProp() {
+        Properties properties = new Properties();
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
-            Properties prop = new Properties();
-            prop.load(in);
-            return prop;
+            properties.load(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return properties;
     }
 
     public Connection initCon(Properties properties) throws Exception {
