@@ -32,7 +32,7 @@ public class SqlRuParse implements Parse {
                 Elements row = doc.select(".postslisttopic");
                 for (Element td : row) {
                     String namePost = td.text();
-                    String linkPost = td.child(0).attr("href"); // ссылки на пост
+                    String linkPost = td.child(0).attr("href");
                     if (namePost.contains("Java") && !namePost.contains("JavaScript")) {
                         /*System.out.println(linkPost);
                         System.out.println(namePost);*/
