@@ -22,7 +22,7 @@ public class Grabber implements Grab {
     private final Properties cfg = new Properties();
 
     public Store store() {
-        return null;
+        return new PsqlStore(cfg);
     }
 
     public Scheduler scheduler() throws SchedulerException {
