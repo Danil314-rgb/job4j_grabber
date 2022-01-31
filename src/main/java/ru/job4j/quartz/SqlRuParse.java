@@ -16,6 +16,12 @@ public class SqlRuParse implements Parse {
         this.dateTimeParser = dateTimeParser;
     }
 
+    public static void main(String[] args) {
+        /*String link = "https://www.sql.ru/forum/job-offers/";
+        SqlRuParse ruParse = new SqlRuParse();
+        ruParse.list(link);*/
+    }
+
     @Override
     public List<Post> list(String link)  {
         List<Post> posts = new ArrayList<>();
