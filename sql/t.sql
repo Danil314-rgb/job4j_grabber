@@ -30,17 +30,9 @@ left join company c
 on c.id = p.company_id
 where p.company_id != 5;
 
-with g AS (
 select company.name, count(person) as c 
 	from company 
 	inner join person 
 	on (company.id = person.company_id) 
 	group by company.name
-)
-select * from g where g.c = (select max(g.c) from g);
-
-
-
-
-
-
+	having count(person.name) = max(person.id);
