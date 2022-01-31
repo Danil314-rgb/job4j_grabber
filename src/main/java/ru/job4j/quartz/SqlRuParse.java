@@ -5,22 +5,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SqlRuParse implements Parse {
 
-    /*private final DateTimeParser dateTimeParser;
+    private final DateTimeParser dateTimeParser;
 
     public SqlRuParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
-    }*/
-
-    public static void main(String[] args) {
-        String link = "https://www.sql.ru/forum/job-offers/";
-        SqlRuParse ruParse = new SqlRuParse();
-        ruParse.list(link);
     }
 
     @Override
@@ -33,13 +26,10 @@ public class SqlRuParse implements Parse {
                 for (Element td : row) {
                     String namePost = td.text();
                     String linkPost = td.child(0).attr("href");
-                    if (namePost.contains("Java") && !namePost.contains("JavaScript")) {
-                        /*System.out.println(linkPost);
-                        System.out.println(namePost);*/
+                    if (namePost.toLowerCase().contains("java") && !namePost.toLowerCase().contains("javascript")) {
                         posts.add(detail(linkPost));
                     }
                 }
-                /*System.out.println("******************");*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,10 +46,7 @@ public class SqlRuParse implements Parse {
             String date = doc.select(".msgFooter").get(0).text();
             date = date.substring(0, date.indexOf('[')).trim();
             String title = doc.select(".messageHeader").get(0).text();
-
-            SqlRuDateTimeParser dateTimeParser = new SqlRuDateTimeParser();
-            LocalDateTime created = dateTimeParser.parse(date);
-            post = new Post(title, link, description, created);
+            post = new Post(title, link, description, dateTimeParser.parse(date));
         } catch (Exception e) {
             e.printStackTrace();
         }
