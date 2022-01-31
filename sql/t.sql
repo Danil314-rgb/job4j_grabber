@@ -31,8 +31,16 @@ on c.id = p.company_id
 where p.company_id != 5;
 
 select company.name, count(person) as c 
-	from company 
-	inner join person 
-	on (company.id = person.company_id) 
-	group by company.name
-	having count(person.name) = max(person.id);
+from company 
+inner join person 
+on (company.id = person.company_id) 
+group by company.id
+having count(person.name) = (select count(company_id)
+							 group by company.id
+							 order by company.name desc
+							) limit 1;
+
+	
+	
+	
+	
