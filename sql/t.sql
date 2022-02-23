@@ -1,10 +1,10 @@
-CREATE TABLE company( 
+create TABLE company(
     id integer NOT NULL,
     name character varying,
     CONSTRAINT company_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE person(
+create TABLE person(
     id integer NOT NULL,
     name character varying,
     company_id integer references company(id),
@@ -36,9 +36,11 @@ inner join person
 on (company.id = person.company_id) 
 group by company.id
 having count(person.name) = (select count(company_id)
-							 group by company.id
-							 order by company.name desc
-							) limit 1;
+							 from person p
+							 group by p.company_id
+							 order by p.company_id desc
+							 limit 1
+							);
 
 	
 	

@@ -80,6 +80,7 @@ public class Grabber implements Grab {
                         for (Post post : store.getAll()) {
                             out.write(post.toString().getBytes(Charset.forName("Windows-1251")));
                             out.write(System.lineSeparator().getBytes());
+                            out.write(System.lineSeparator().getBytes());
                         }
                     } catch (IOException io) {
                         io.printStackTrace();
